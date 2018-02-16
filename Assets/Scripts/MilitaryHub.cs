@@ -17,7 +17,7 @@ public class MilitaryHub : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		InvokeRepeating ("SpawnSoldier", 2, 8);
+		InvokeRepeating ("SpawnSoldier", 2, 10);
 	}
 
 	// Update is called once per frame

@@ -10,18 +10,25 @@ public class Enemy : EntityMovable {
 
 	void Update () {
 		if (!hasTarget) {
-			if (Random.Range(0, 10) > 7) {
-				GameObject sourceTile = GameController.Instance.FindClosest ("MilitaryHub", pos2d);
+			if (Random.Range(0, 10) > 3) {
+				GameObject sourceTile = GameController.Instance.FindClosest ("MilitaryHub", pos2d, null, 6);
 				if (sourceTile != null) {
 					hasTarget = true;
 					targetObject = sourceTile;
+				}
+				else {
+					GameObject economyTile = GameController.Instance.FindClosest ("EconomyHub", pos2d, null, 6);
+					if (sourceTile != null) {
+						hasTarget = true;
+						targetObject = sourceTile;
+					}
 				}
 			}
 		}
 
 		if (!hasTarget) {
-			if (Random.Range(0, 5) > 1) {
-				GameObject sourceTile = GameController.Instance.FindClosest ("Worker", pos2d);
+			if (Random.Range(0, 5) > 2) {
+				GameObject sourceTile = GameController.Instance.FindClosest ("Worker", pos2d, null, 12);
 				if (sourceTile != null) {
 					hasTarget = true;
 					targetObject = sourceTile;
@@ -31,7 +38,7 @@ public class Enemy : EntityMovable {
 
 		if (!hasTarget) {
 			if (Random.Range(0, 4) > 1) {
-				GameObject sourceTile = GameController.Instance.FindClosest ("Source", pos2d);
+				GameObject sourceTile = GameController.Instance.FindClosest ("Source", pos2d, null, 6);
 				if (sourceTile != null) {
 					hasTarget = true;
 					targetObject = sourceTile;

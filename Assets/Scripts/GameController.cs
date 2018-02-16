@@ -36,11 +36,14 @@ public class GameController : MonoBehaviour {
 		camera.transform.position = new Vector3 (MAP_WIDTH / 2.0f, MAP_HEIGHT / 2.0f, -10);
 		InvokeRepeating ("SpawnRandomSource", 2, 2);
 		Invoke("SpawnEnemy", 2.4f);
-		InvokeRepeating ("CorruptionPenalties", 10, 3);
+		InvokeRepeating ("CorruptionPenalties", 10, 5);
 
-		supplies = 30;
+		supplies = 20;
 
 	}
+
+	float enemiesToSpawn = 0;
+	float difficulty = 0.4f;
 	
 	// Update is called once per frame
 	void Update () {
@@ -51,7 +54,7 @@ public class GameController : MonoBehaviour {
 			supplies = -10000;
 		}
 
-		if (supplies >= 100) {
+		if (supplies >= 500) {
 			suppliesText.text = "WIN";
 			supplies = 10000;
 		}
@@ -59,6 +62,17 @@ public class GameController : MonoBehaviour {
 		if (Input.GetKeyDown(KeyCode.L)) {
 			Application.LoadLevel (Application.loadedLevel);
 		}
+
+		enemiesToSpawn += Time.deltaTime * difficulty;
+		difficulty += Time.deltaTime * 0.01f;
+
+		for (int i = 0; i < (int)enemiesToSpawn; i++) {
+			Vector2 r = Random.insideUnitCircle.normalized * (MAP_WIDTH / 2 + 5) + new Vector2 (MAP_WIDTH / 2.0f, MAP_HEIGHT / 2.0f);
+			GameObject.Instantiate (enemyEntity, r, Quaternion.identity);
+		}
+
+		enemiesToSpawn -= (int)enemiesToSpawn;
+
 	}
 
 	void CorruptionPenalties() {
@@ -80,7 +94,7 @@ public class GameController : MonoBehaviour {
 	float d = 0;
 
 	void SpawnEnemy() {
-		Vector2 r = Random.insideUnitCircle.normalized * (MAP_WIDTH / 2 + 2) + new Vector2 (MAP_WIDTH / 2.0f, MAP_HEIGHT / 2.0f);
+		/*Vector2 r = Random.insideUnitCircle.normalized * (MAP_WIDTH / 2 + 2) + new Vector2 (MAP_WIDTH / 2.0f, MAP_HEIGHT / 2.0f);
 
 		GameObject.Instantiate (enemyEntity, r, Quaternion.identity);
 
@@ -92,7 +106,7 @@ public class GameController : MonoBehaviour {
 			h = 0.02f;
 		}
 
-		Invoke("SpawnEnemy", h);
+		Invoke("SpawnEnemy", h);*/
 	}
 
 	private void GenerateMap() {
@@ -161,7 +175,7 @@ public class GameController : MonoBehaviour {
 			tiles [x, y] = GameObject.Instantiate (grassTile);
 			tiles [x, y].transform.position = new Vector2 (x, y);
 
-			supplies -= 2;
+			supplies -= 1;
 		}
 	}
 
@@ -182,7 +196,7 @@ public class GameController : MonoBehaviour {
 		return tiles [x, y].GetComponent<T>();
 	}
 
-	public GameObject FindClosest(string tag, Vector2 pos, List<GameObject> excludeList = null) {
+	public GameObject FindClosest(string tag, Vector2 pos, List<GameObject> excludeList = null, int maxRange = 10000) {
 		GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
 
 		float sqrD = 1000000;
@@ -195,7 +209,8 @@ public class GameController : MonoBehaviour {
 
 			Vector2 d = new Vector2 (obj.transform.position.x, obj.transform.position.y) - pos;
 			float newSqrD = d.sqrMagnitude;
-			if (newSqrD < sqrD) {
+
+			if (newSqrD < sqrD && newSqrD < maxRange * maxRange) {
 				sqrD = newSqrD;
 				closest = obj;
 
