@@ -2,32 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Soldier : EntityMovable {
+public class Militia : EntityMovable {
 
 	private MilitaryHub ownerHub;
-
-	public static List<GameObject> targetList = new List<GameObject> ();
 
 	public void SetMilitaryHub(MilitaryHub hub) {
 		ownerHub = hub;
 	}
 
 	protected override void OnStart() {
-		movementSpeed = 2;
+		movementSpeed = 4;
 	}
 
 	void Update () {
-
-		if (!hasTarget || targetObject == ownerHub.gameObject) {
-			GameObject t = GameController.Instance.FindClosest ("Enemy", pos2d, targetList);
-
-			if (t != null) {
-				SetTarget (t);
-				targetList.Add (t);
-			}
-			else {
-				SetTarget(ownerHub.gameObject);
-			}
+		if (!hasTarget) {
+			targetObject = ownerHub.gameObject;
+			hasTarget = true;
 		}
 	}
 
@@ -36,6 +26,12 @@ public class Soldier : EntityMovable {
 
 		if (obj.CompareTag("Enemy")) {
 			Destroy (obj);
+			Destroy (gameObject);
+			ownerHub.NotifyDestroyed (this);
+		}
+		else if (obj.CompareTag("MilitaryHub")) {
+			Destroy (gameObject);
+			ownerHub.ReturnToBase (this);
 		}
 	}
 

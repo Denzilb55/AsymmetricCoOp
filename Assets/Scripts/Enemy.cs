@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Enemy : EntityMovable {
 
+	private List<MilitaryHub> deathListinerHubs = new List<MilitaryHub>();
+
 	protected override void OnStart() {
 		movementSpeed = 1.5f;
 	}
@@ -85,5 +87,17 @@ public class Enemy : EntityMovable {
 			
 			GameController.Instance.DestroyTile (x, y);
 		}
+	}
+
+	public void RegisterWatchers(MilitaryHub watcher) {
+		deathListinerHubs.Add (watcher);
+	}
+
+	void OnDestroy() {
+		foreach (MilitaryHub hub in deathListinerHubs) {
+			hub.NotifyDestroyed (gameObject);
+		}
+
+		Soldier.targetList.Remove (gameObject);
 	}
 }

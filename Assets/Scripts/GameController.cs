@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
 	public GameObject grassTile;
 	public GameObject sourceTile;
 	public GameObject corruptionTile;
+	public GameObject dirtTile;
 
 	public GameObject enemyEntity;
 	public GameObject workerEntity;
@@ -36,14 +37,14 @@ public class GameController : MonoBehaviour {
 		camera.transform.position = new Vector3 (MAP_WIDTH / 2.0f, MAP_HEIGHT / 2.0f, -10);
 		InvokeRepeating ("SpawnRandomSource", 2, 2);
 		Invoke("SpawnEnemy", 2.4f);
-		InvokeRepeating ("CorruptionPenalties", 10, 5);
+		InvokeRepeating ("CorruptionPenalties", 15, 5);
 
-		supplies = 20;
+		supplies = 40;
 
 	}
 
 	float enemiesToSpawn = 0;
-	float difficulty = 0.4f;
+	float difficulty = 0.22f;
 	
 	// Update is called once per frame
 	void Update () {
@@ -54,7 +55,7 @@ public class GameController : MonoBehaviour {
 			supplies = -10000;
 		}
 
-		if (supplies >= 500) {
+		if (supplies >= 1000) {
 			suppliesText.text = "WIN";
 			supplies = 10000;
 		}
@@ -64,7 +65,7 @@ public class GameController : MonoBehaviour {
 		}
 
 		enemiesToSpawn += Time.deltaTime * difficulty;
-		difficulty += Time.deltaTime * 0.01f;
+		difficulty += Time.deltaTime * 0.0042f;
 
 		for (int i = 0; i < (int)enemiesToSpawn; i++) {
 			Vector2 r = Random.insideUnitCircle.normalized * (MAP_WIDTH / 2 + 5) + new Vector2 (MAP_WIDTH / 2.0f, MAP_HEIGHT / 2.0f);
@@ -76,7 +77,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	void CorruptionPenalties() {
-		supplies -= (int)(GameObject.FindGameObjectsWithTag ("Corruption").Length * 0.18f);
+		supplies -= (int)(GameObject.FindGameObjectsWithTag ("Corruption").Length * 0.25f);
 	}
 
 	void SpawnRandomSource() {
@@ -146,9 +147,6 @@ public class GameController : MonoBehaviour {
 			tiles [x, y].transform.position = new Vector2 (x, y);
 
 			supplies += 2;
-			if (Random.Range(0, 3) == 0) {
-				supplies += 2;
-			}
 		}
 	}
 
@@ -159,9 +157,7 @@ public class GameController : MonoBehaviour {
 			tiles [x, y] = GameObject.Instantiate (grassTile);
 			tiles [x, y].transform.position = new Vector2 (x, y);
 
-			harvestBy.supplies += 2;
-
-
+			harvestBy.supplies += 5;
 		}
 	}
 
@@ -172,10 +168,21 @@ public class GameController : MonoBehaviour {
 		if (CheckTileTag(x, y, "Corruption")) {
 			Worker.occupiedSources.Remove (tiles [x, y]);
 			Destroy(tiles [x, y]);
+			tiles [x, y] = GameObject.Instantiate (dirtTile);
+			tiles [x, y].transform.position = new Vector2 (x, y);
+
+			supplies -= 1;
+			return;
+		}
+
+		if (CheckTileTag(x, y, "Dirt")) {
+			Worker.occupiedSources.Remove (tiles [x, y]);
+			Destroy(tiles [x, y]);
 			tiles [x, y] = GameObject.Instantiate (grassTile);
 			tiles [x, y].transform.position = new Vector2 (x, y);
 
 			supplies -= 1;
+			return;
 		}
 	}
 
@@ -211,6 +218,29 @@ public class GameController : MonoBehaviour {
 			float newSqrD = d.sqrMagnitude;
 
 			if (newSqrD < sqrD && newSqrD < maxRange * maxRange) {
+				sqrD = newSqrD;
+				closest = obj;
+
+				if (sqrD <= 1) {
+					return closest;
+				}
+			}
+		}
+
+		return closest;
+	}
+
+	public GameObject FindClosestAvailableWorker(Vector2 pos) {
+		GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag("Worker");
+
+		float sqrD = 1000000;
+		GameObject closest = null;
+
+		foreach (GameObject obj in objectsWithTag) {
+			Vector2 d = new Vector2 (obj.transform.position.x, obj.transform.position.y) - pos;
+			float newSqrD = d.sqrMagnitude;
+
+			if (newSqrD < sqrD && obj.GetComponent<Worker>().IsAvailableForRecruitment()) {
 				sqrD = newSqrD;
 				closest = obj;
 

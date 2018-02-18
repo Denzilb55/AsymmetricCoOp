@@ -67,8 +67,80 @@ public abstract class BaseCursor : MonoBehaviour {
 		transform.position = new Vector3 (x, y, -5);
 	}
 
-	protected virtual void HandleController() {
-		
+	bool readAxisV = true;
+	bool readAxisH = true;
+
+	float vTime = 0;
+	float hTime = 0;
+
+	public string vMoveString;
+	public string hMoveString;
+	public string actionA;
+	public string actionB;
+
+	public float shiftPause;
+
+	protected void HandleController() {
+
+		if (readAxisV) {
+			if (Input.GetAxis (vMoveString) > 0.3f) {
+				transform.position -= Vector3.up;
+			} else if (Input.GetAxis (vMoveString) < -0.3f) {
+				transform.position += Vector3.up;
+			}
+			readAxisV = false;
+			vTime = 0.3f;
+		}
+		else {
+			vTime -= Time.deltaTime;
+			if (vTime < 0) {
+				if (Input.GetAxis (vMoveString) > 0.3f) {
+					transform.position -= Vector3.up;
+				} else if (Input.GetAxis (vMoveString) < -0.3f) {
+					transform.position += Vector3.up;
+				}
+				vTime = 0.18f;
+			}
+		}
+
+		if (Mathf.Abs(Input.GetAxis (vMoveString)) <= 0.3f) {
+			readAxisV = true;
+			vTime = 0;
+		}
+
+		if (readAxisH) {
+			if (Input.GetAxis (hMoveString) > 0.3f) {
+				transform.position -= Vector3.left;
+			} else if (Input.GetAxis (hMoveString) < -0.3f) {
+				transform.position += Vector3.left;
+			}
+			readAxisH = false;
+			hTime = 0.3f;
+		}
+		else {
+			hTime -= Time.deltaTime;
+			if (hTime < 0) {
+				if (Input.GetAxis (hMoveString) > 0.3f) {
+					transform.position -= Vector3.left;
+				} else if (Input.GetAxis (hMoveString) < -0.3f) {
+					transform.position += Vector3.left;
+				}
+				hTime = 0.18f;
+			}
+		}
+
+		if (Mathf.Abs(Input.GetAxis (hMoveString)) <= 0.3f) {
+			readAxisH = true;
+			hTime = 0;
+		}
+
+		if (Input.GetButtonDown(actionA)) {
+			DoAction ();
+		}
+
+		if (Input.GetButtonDown(actionB)) {
+			DoAction2 ();
+		}
 	}
 
 	protected abstract void DoAction ();

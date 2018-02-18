@@ -52,9 +52,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee0f3a792e97b4bffb75185d5e3e4c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soldierTemplate: {fileID: 114260517194467196, guid: a72396c2168d741dabf697f5603c522d,
+  militiaTemplate: {fileID: 114260517194467196, guid: a72396c2168d741dabf697f5603c522d,
     type: 2}
-  soldiers: []
+  soldierTemplate: {fileID: 114818276537107098, guid: 070fd5b1229484fff94b089b9f4ae64e,
+    type: 2}
+  assignedSoldier: {fileID: 0}
+  assignedWorker: {fileID: 0}
+  militias: []
 --- !u!212 &212831083156832958
 SpriteRenderer:
   m_ObjectHideFlags: 1

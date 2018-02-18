@@ -39,5 +39,12 @@ public class Worker : EntityMovable {
 			GameController.Instance.supplies += supplies;
 			supplies = 0;
 		}
+		else if (obj.CompareTag("MilitaryHub")) {
+			obj.GetComponent<MilitaryHub> ().Recruit (this);
+		}
+	}
+
+	public bool IsAvailableForRecruitment() {
+		return supplies == 0 && (targetObject == null || (targetObject.GetComponent<MilitaryHub> () == null));
 	}
 }

@@ -32,10 +32,14 @@ public class EntityMovable : MonoBehaviour {
 		}
 	}
 
+	public void SetTarget(GameObject target) {
+		hasTarget = true;
+		targetObject = target;
+	}
+
 	// Use this for initialization
 	void Start () {
 		OnStart ();
-		hasTarget = false;
 	}
 
 	protected virtual void OnStart() {

@@ -207,6 +207,10 @@ MonoBehaviour:
   right: 100
   action: 101
   action2: 114
+  vMoveString: EconomyV
+  hMoveString: EconomyH
+  actionA: EconomyA
+  actionB: EconomyB
   economyHub: {fileID: 114399043862024486, guid: d487e58f9093a4e1b880384a4274bd7b,
     type: 2}
 --- !u!1 &270100093 stripped
@@ -231,6 +235,10 @@ MonoBehaviour:
   right: 275
   action: 13
   action2: 303
+  vMoveString: MilitaryV
+  hMoveString: MilitaryH
+  actionA: MilitaryA
+  actionB: MilitaryB
   militaryHub: {fileID: 114392411875130134, guid: bc2caea367a1946d3bfd8fe3e77325b8,
     type: 2}
 --- !u!1 &649162043
@@ -257,7 +265,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 649162043}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -416.5, y: 283, z: 0}
+  m_LocalPosition: {x: -521, y: 263.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1173982570}
@@ -389,7 +397,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1173982566}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 521.5, y: 319, z: 0}
+  m_LocalPosition: {x: 626, y: 299.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 649162044}
@@ -635,6 +643,7 @@ MonoBehaviour:
   sourceTile: {fileID: 1316634531367682, guid: 108ee168700404915a8fabcfefd37b1e, type: 2}
   corruptionTile: {fileID: 1485639647432714, guid: 8ac43dedd89cb462d98377d8a29baaff,
     type: 2}
+  dirtTile: {fileID: 1770685116330446, guid: 37fb7076c39b3429caaa41c29049b9ed, type: 2}
   enemyEntity: {fileID: 1385410117976184, guid: b3cc5a9dc074048ca8ed7c9dc00e5804,
     type: 2}
   workerEntity: {fileID: 1385410117976184, guid: 2571cddc18b434d91b1e6c38043174d3,
